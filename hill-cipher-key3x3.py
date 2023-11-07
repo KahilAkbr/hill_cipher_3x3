@@ -10,7 +10,7 @@ def main():
     chooseMenu()
 
 def chooseMenu():
-    # print("Key = " + hill_cipher_key) # Command this line ini jika tidak ingin melihat key
+    # print("Key = " + hill_cipher_key) # Command line ini jika tidak ingin melihat key
     while True:
         determinant_value = determinant(hill_cipher_key)
         is_invertible,inverse_multiplication = checkMultiplicative(determinant_value)
@@ -82,6 +82,7 @@ def separate(string, length):
     
     return separated_string
 
+# Mengubah string menjadi integer list
 def StringToInt(input_string):
     integer_list = []
     for char in input_string:
@@ -96,6 +97,7 @@ def StringToInt(input_string):
         integer_list.append(value)
     return integer_list
 
+# Mengubah integer list menjadi string
 def IntToString(int_list):
     result = ''
     for num in int_list:
@@ -105,20 +107,23 @@ def IntToString(int_list):
             result += chr(num + ord('A'))
     return result
 
+# Memotong integer list setiap 3 karakter
 def splitIntList(input_list, chunk_size):
     return [input_list[i:i + chunk_size] for i in range(0, len(input_list), chunk_size)]
 
+# Encrypt (C = K * P mod 27)
 def encrypt(matrix_int_list):
     key_matrix = getKeyMatrix()
     encrypted_matrix = []
 
     for block in matrix_int_list:
-        encrypted_block = np.dot(key_matrix, np.array(block).reshape(3, 1))
+        encrypted_block = np.dot(key_matrix, np.array(block).reshape(3, 1)) # K * P
         encrypted_block = (encrypted_block % 27).flatten()
         encrypted_matrix.extend(encrypted_block)
 
     return encrypted_matrix
 
+# Decypt (P = K^-1 * C mod 27)
 def decrypt(matrix_int_list, inverse_multiplication, adj_matrix):
     decrypted_matrix = []
 
@@ -129,17 +134,20 @@ def decrypt(matrix_int_list, inverse_multiplication, adj_matrix):
 
     return decrypted_matrix
 
+# Key determinant value
 def determinant(key_matrix):
     key_matrix = getKeyMatrix()
     determinant = np.linalg.det(key_matrix)
     return round(determinant)
 
+# Adjoint Matrix 3x3
 def calculateAdjointMatrix():
     key_matrix = getKeyMatrix()
     cofactor_matrix = calculateCofactorMatrix(key_matrix)
     adjoint_matrix = cofactor_matrix.T 
     return adjoint_matrix
 
+# Key cofactor value
 def calculateCofactorMatrix(matrix):
     n = matrix.shape[0]
     cofactor_matrix = np.zeros_like(matrix)
@@ -151,6 +159,7 @@ def calculateCofactorMatrix(matrix):
 
     return cofactor_matrix
 
+# Cek apakah key inversible dengan mod 27
 def checkMultiplicative(determinant_value):
     try:
         inverse_multiplication = pow(determinant_value, -1, 27)
@@ -158,6 +167,7 @@ def checkMultiplicative(determinant_value):
     except ValueError:
         return False, None
 
+# int list dari key
 def getKeyMatrix():
     key_matrix = []
     for char in hill_cipher_key:
